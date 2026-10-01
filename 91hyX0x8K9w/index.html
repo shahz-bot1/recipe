@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dindigul Chicken Biriyani — Interactive Recipe</title>
+<style>
+:root, html[data-theme="light"]{
+  --bg:#ffffff; --surface:#f7f5f1; --muted-surface:#efebe3;
+  --text:#1c1a16; --muted:#6f6a5e; --border:#e3ddd2;
+  --accent:#b3541e; --on-accent:#ffffff; --focus:#b3541e;
+  --shadow:rgba(60,40,20,.10);
+}
+html[data-theme="dark"]{
+  --bg:#151310; --surface:#1f1c17; --muted-surface:#292520;
+  --text:#f1ece1; --muted:#aaa195; --border:#38332a;
+  --accent:#e08a3c; --on-accent:#1c1105; --focus:#e08a3c;
+  --shadow:rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.55}
+.wrap{max-width:640px;margin:0 auto;padding:18px 16px 40px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px;box-shadow:0 2px 10px var(--shadow)}
+h1{font-size:24px;margin:0 0 4px}
+.sub{font-size:13.5px;color:var(--muted);margin:0 0 14px}
+.sub a{color:var(--accent)}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.scaler{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.scaler .lbl{font-size:13px;color:var(--muted)}
+.chip{border:1px solid var(--border);background:var(--muted-surface);color:var(--text);border-radius:999px;padding:6px 13px;font-size:13.5px;cursor:pointer}
+.chip.on{background:var(--accent);color:var(--on-accent);border-color:var(--accent);font-weight:700}
+.themebtn{border:1px solid var(--border);background:var(--muted-surface);color:var(--text);border-radius:9px;padding:6px 12px;font-size:13px;cursor:pointer}
+.tabs{display:flex;gap:8px;margin:14px 0 12px}
+.tab{flex:1;border:1px solid var(--border);background:var(--muted-surface);color:var(--text);border-radius:10px;padding:10px;font-size:15px;cursor:pointer;font-weight:600}
+.tab.on{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.progress{height:9px;border-radius:99px;background:var(--muted-surface);overflow:hidden;margin-bottom:6px}
+.bar{height:100%;width:0;background:var(--accent);border-radius:99px;transition:width .3s}
+.plabel{font-size:12.5px;color:var(--muted);margin-bottom:12px}
+.ing{display:flex;gap:11px;align-items:flex-start;padding:10px 4px;border-bottom:1px solid var(--border);font-size:15px;cursor:pointer}
+.ing:last-child{border-bottom:none}
+.ing input{margin-top:4px;accent-color:var(--accent);width:17px;height:17px;flex:none;cursor:pointer}
+.ing.done .iname{text-decoration:line-through;color:var(--muted)}
+.iname{font-weight:600}
+.iqty{color:var(--accent);font-weight:700;white-space:nowrap}
+.inote{display:block;font-weight:400;color:var(--muted);font-size:13px;margin-top:2px}
+.stepcard{border:1px solid var(--border);border-radius:14px;padding:18px;background:var(--muted-surface)}
+.snum{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px}
+.stitle{font-size:20px;font-weight:700;margin:0 0 10px}
+.sbody{font-size:15.5px;line-height:1.65;margin-bottom:14px}
+.sbody b{color:var(--accent)}
+.snav{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:10px;padding:10px 16px;font-size:15px;cursor:pointer;font-weight:600}
+.btn:disabled{opacity:.35;cursor:default}
+.btn.primary{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.btn:focus-visible,.chip:focus-visible,.tab:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.timer{margin-top:14px;border:1px dashed var(--border);border-radius:12px;padding:12px;text-align:center;background:var(--surface)}
+.tdisp{font-size:34px;font-weight:700;font-variant-numeric:tabular-nums;margin-bottom:10px}
+.tdisp.fin{color:var(--accent)}
+.tbtns{display:flex;gap:8px;justify-content:center}
+.stepdots{display:flex;gap:6px;justify-content:center;margin:14px 0 4px;flex-wrap:wrap}
+.dot{width:11px;height:11px;border-radius:50%;background:var(--border);border:none;padding:0;cursor:pointer}
+.dot.done{background:var(--accent)}
+.dot.cur{outline:2px solid var(--accent);outline-offset:2px}
+.note{font-size:13px;color:var(--muted);margin-top:16px;line-height:1.6}
+.src{font-size:12.5px;color:var(--muted);margin-top:18px;border-top:1px solid var(--border);padding-top:12px}
+.backlink{display:inline-block;font-size:13px;font-weight:600;color:var(--accent);text-decoration:none;margin-bottom:10px}
+.backlink:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+h2.ph{font-size:17px;margin:18px 0 4px}
+.slist{list-style:none;margin:0;padding:0}
+.slist li{padding:9px 4px;border-bottom:1px solid var(--border);font-size:14.5px}
+.slist li:last-child{border-bottom:none}
+.slist .inote{color:var(--muted);font-size:13px}
+ol.ssteps{margin:6px 0 0;padding-left:22px;font-size:14.5px}
+ol.ssteps li{margin-bottom:11px;line-height:1.55}
+ol.ssteps .st{font-weight:700}
+ol.ssteps .tm{color:var(--accent);font-weight:600;font-size:13px}
+@media (max-width:420px){ h1{font-size:21px} .stitle{font-size:18px} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <a class="backlink" href="../">← All recipes</a>
+    <div class="topbar">
+      <div>
+        <h1>Dindigul Chicken Biriyani</h1>
+        <p class="sub">One-pot basmati version &middot; interactive cook-along</p>
+      </div>
+      <button class="themebtn" id="themeBtn" aria-label="Toggle light and dark theme">Theme: Auto</button>
+    </div>
+    <div class="scaler"><span class="lbl">Chicken quantity:</span><span id="scaleRow"></span></div>
+    <div class="tabs">
+      <button class="tab" id="tabIng">Ingredients</button>
+      <button class="tab" id="tabSteps">Cook step by step</button>
+    </div>
+    <div class="progress"><div class="bar" id="pbar"></div></div>
+    <div class="plabel" id="plabel"></div>
+    <div id="paneIng">
+      <h2 class="ph">Ingredients — 1 kg chicken</h2>
+      <ul class="slist">
+        <li><strong>Chicken</strong> — <span class="iqty">1 kg</span><br><span class="inote">~140 g pieces; keep leg pieces aside</span></li>
+        <li><strong>Basmati rice</strong> — <span class="iqty">1 kg</span><br><span class="inote">rinse &amp; soak 20–30 min before starting</span></li>
+        <li><strong>Water</strong> — <span class="iqty">1 : 1.5</span><br><span class="inote">rice-to-water by volume, measured in the same vessel</span></li>
+        <li><strong>Groundnut oil + ghee</strong><br><span class="inote">a few tbsp of each; the combo is the point</span></li>
+        <li><strong>Star anise</strong> — <span class="iqty">2</span><br><span class="inote">whole, for tempering + paste</span></li>
+        <li><strong>Cinnamon sticks</strong> — <span class="iqty">3–4 in</span><br><span class="inote">generous — signature of Dindigul</span></li>
+        <li><strong>Green cardamom</strong> — <span class="iqty">8–10</span><br><span class="inote">generous — signature of Dindigul</span></li>
+        <li><strong>Cloves</strong> — <span class="iqty">8–10</span><br><span class="inote">generous — signature of Dindigul</span></li>
+        <li><strong>Onions</strong> — <span class="iqty">2 large</span><br><span class="inote">sliced thin &amp; elongated</span></li>
+        <li><strong>Mutton fat</strong> — <span class="iqty">≈50 g</span><br><span class="inote">small piece; keeps rice moist &amp; fragmented</span></li>
+        <li><strong>Green chillies</strong> — <span class="iqty">8–10</span><br><span class="inote">small round; use more if long thin ones</span></li>
+        <li><strong>Garlic cloves</strong> — <span class="iqty">≈30 g</span><br><span class="inote">sliced, for aroma</span></li>
+        <li><strong>Mint leaves</strong><br><span class="inote">a generous handful — mandatory</span></li>
+        <li><strong>Coriander leaves</strong><br><span class="inote">a handful, finely chopped</span></li>
+        <li><strong>Ginger-garlic paste</strong> — <span class="iqty">135 g garlic + 65 g ginger</span><br><span class="inote">garlic must exceed ginger (2:1)</span></li>
+        <li><strong>Curd</strong> — <span class="iqty">65–70 g</span><br><span class="inote">only if the masala starts sticking</span></li>
+        <li><strong>Lemon</strong> — <span class="iqty">1 small</span><br><span class="inote">juice added after water — never sautéed</span></li>
+        <li><strong>Salt</strong><br><span class="inote">to taste; fix seasoning before dum</span></li>
+      </ul>
+    </div>
+    <div id="paneStep" style="display:none"></div>
+    <div id="staticSteps">
+      <h2 class="ph">Method — step by step</h2>
+      <ol class="ssteps">
+        <li><span class="st">Soak the rice, blend the spice paste.</span> Rinse and soak the basmati 20–30 min. Blend the star anise, cinnamon, cardamom and cloves dry first (cardamom stays coarse), then with a splash of water to a fine paste. <span class="tm">Timer: 20 min</span></li>
+        <li><span class="st">Temper the whole spices.</span> Heat groundnut oil + ghee together; temper the whole spices. No bay leaves — the Dindigul way.</li>
+        <li><span class="st">Build the base.</span> Sauté the thin-sliced onions; add the mutton fat after they soften (adding it to screaming-hot oil makes it burst). Add green chillies, sliced garlic and mint leaves; cook till everything caramelises.</li>
+        <li><span class="st">Cook the masala.</span> Add ginger-garlic paste → spice paste → coriander leaves. Cook till oil releases and it turns dark brown. Stir in the curd if it sticks; a splash of water if it gets too thick. <span class="tm">Timer: 10 min</span></li>
+        <li><span class="st">Chicken in — big pieces first.</span> Add the big chicken pieces (not the legs); cook 10–12 min to about 80% done — not fully, the rice phase finishes them. Salt now so the chicken takes the seasoning. <span class="tm">Timer: 11 min</span></li>
+        <li><span class="st">Leg pieces, water, lemon.</span> Add the leg pieces (late, so they stay whole). Pour water at 1 : 1.5 rice-to-water. Add the lemon juice now — adding it earlier turns it bitter.</li>
+        <li><span class="st">Rice goes in.</span> Bring to a full rolling boil — mandatory, it kills any raw smell. Strain the soaked rice and add it to the boiling mixture.</li>
+        <li><span class="st">High flame — watch the water.</span> High flame only until the water is just absorbed and the rice is ~70% done. Stop earlier than the video's 90% — basmati finishes on steam. <span class="tm">Timer: 8 min</span></li>
+        <li><span class="st">Dum.</span> Turn to low flame, seal, and leave undisturbed 10–15 min. <span class="tm">Timer: 12 min</span></li>
+        <li><span class="st">Rest &amp; serve.</span> Rest 10 min off the heat, then open. Rice should be fragmented and moist, leg pieces whole. Serve piping hot with dalcha. <span class="tm">Timer: 10 min</span></li>
+      </ol>
+      <p class="note">Tip: open this file in Safari or Chrome for the interactive version with checklists, quantity scaler and countdown timers — the phone's file preview shows this readable version instead.</p>
+    </div>
+    <div class="stepdots" id="stepDots" style="display:none"></div>
+    <p class="note">Seeraga samba is the authentic grain (1:2 water, cook to 90% dry, 20-min dum). This page is the basmati one-pot adaptation: 1:1.5 water, rice in at ~70% done, 10&ndash;15-min dum. Spice amounts the video calls &ldquo;generous&rdquo; are sensible scaled estimates.</p>
+    <p class="src">Recipe from Chef Deena's Kitchen (CDK 1375) — Mr. Mujib of Mujib Biriyani, Dindigul — via English captions. Video: <a href="https://youtu.be/91hyX0x8K9w" style="color:var(--accent)">youtu.be/91hyX0x8K9w</a></p>
+  </div>
+</div>
+<script>
+(function(){
+"use strict";
+var KEY='dindigul-biriyani-v1';
+function load(){ try{ var s=JSON.parse(localStorage.getItem(KEY)); if(s&&typeof s==='object') return s; }catch(e){} return {scale:1,tab:'ing',checked:{},done:{},step:0,theme:'auto'}; }
+var S=load();
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){} }
+
+var ING=[
+ {id:'chicken',n:'Chicken',q:function(s){return (1*s)+' kg';},note:'~140 g pieces; keep leg pieces aside'},
+ {id:'rice',n:'Basmati rice',q:function(s){return (1*s)+' kg';},note:'rinse & soak 20–30 min before starting'},
+ {id:'water',n:'Water',q:function(){return '1 : 1.5';},note:'rice-to-water by volume, measured in the same vessel'},
+ {id:'fats',n:'Groundnut oil + ghee',q:function(){return '—';},note:'a few tbsp of each; the combo is the point'},
+ {id:'anise',n:'Star anise',q:function(s){return String(Math.round(2*s));},note:'whole, for tempering + paste'},
+ {id:'cinna',n:'Cinnamon sticks',q:function(s){return Math.round(3*s)+'–'+Math.round(4*s)+' in';},note:'generous — signature of Dindigul'},
+ {id:'card',n:'Green cardamom',q:function(s){return Math.round(8*s)+'–'+Math.round(10*s);},note:'generous — signature of Dindigul'},
+ {id:'clove',n:'Cloves',q:function(s){return Math.round(8*s)+'–'+Math.round(10*s);},note:'generous — signature of Dindigul'},
+ {id:'onion',n:'Onions',q:function(s){return Math.round(2*s)+' large';},note:'sliced thin & elongated'},
+ {id:'fat',n:'Mutton fat',q:function(s){return '≈'+Math.round(50*s)+' g';},note:'small piece; keeps rice moist & fragmented'},
+ {id:'chilli',n:'Green chillies',q:function(s){return Math.round(8*s)+'–'+Math.round(10*s);},note:'small round; use more if long thin ones'},
+ {id:'garlic',n:'Garlic cloves',q:function(s){return '≈'+Math.round(30*s)+' g';},note:'sliced, for aroma'},
+ {id:'mint',n:'Mint leaves',q:function(){return '—';},note:'a generous handful — mandatory'},
+ {id:'cori',n:'Coriander leaves',q:function(){return '—';},note:'a handful, finely chopped'},
+ {id:'gg',n:'Ginger-garlic paste',q:function(s){return Math.round(135*s)+' g garlic + '+Math.round(65*s)+' g ginger';},note:'garlic must exceed ginger (2:1)'},
+ {id:'curd',n:'Curd',q:function(s){return Math.round(65*s)+'–'+Math.round(70*s)+' g';},note:'only if the masala starts sticking'},
+ {id:'lemon',n:'Lemon',q:function(s){return (s===0.5?'½':String(s))+' small';},note:'juice added after water — never sautéed'},
+ {id:'salt',n:'Salt',q:function(){return '—';},note:'to taste; fix seasoning before dum'}
+];
+var STEPS=[
+ {t:'Soak the rice, blend the spice paste',b:'Rinse and soak the <b>basmati for 20–30 minutes</b>. Blend the star anise, cinnamon, cardamom and cloves dry first (cardamom stays coarse), then with a splash of water to a <b>fine paste</b>.',timer:1200,tl:'Soak'},
+ {t:'Temper the whole spices',b:'Heat <b>groundnut oil + ghee</b> together. Temper the whole spices — <b>no bay leaves</b>; that is the Dindigul way.'},
+ {t:'Build the base',b:'Sauté the <b>thin-sliced onions</b>. Add the <b>mutton fat after they soften</b> (adding it to screaming-hot oil makes it burst). Add the green chillies, sliced garlic and mint leaves; cook till everything caramelises.'},
+ {t:'Cook the masala',b:'Add <b>ginger-garlic paste</b> → <b>spice paste</b> → coriander leaves. Cook till <b>oil releases and it turns dark brown</b>. Stir in the curd if it sticks; a splash of water if it gets too thick.',timer:600,tl:'Masala'},
+ {t:'Chicken in — big pieces first',b:'Add the <b>big chicken pieces (not the legs)</b>. Cook <b>10–12 minutes to about 80% done</b> — not fully, the rice phase finishes them. <b>Salt now</b> so the chicken takes the seasoning.',timer:660,tl:'Chicken'},
+ {t:'Leg pieces, water, lemon',b:'Add the <b>leg pieces</b> (late, so they stay whole). Pour water at <b>1 : 1.5 rice-to-water</b>. Add the <b>lemon juice now</b> — adding it earlier turns it bitter.'},
+ {t:'Rice goes in',b:'Bring to a <b>full rolling boil</b> — mandatory, it kills any raw smell. Strain the soaked rice and add it to the boiling mixture.'},
+ {t:'High flame — watch the water',b:'High flame only until the water is <b>just absorbed and the rice is ~70% done</b>. Stop earlier than the video’s 90% — basmati finishes on steam.',timer:480,tl:'High flame'},
+ {t:'Dum',b:'Turn to <b>low flame, seal, and leave undisturbed for 10–15 minutes</b>.',timer:720,tl:'Dum'},
+ {t:'Rest & serve',b:'<b>Rest 10 minutes off the heat</b>, then open. The rice should be fragmented and moist, the leg pieces whole. Serve <b>piping hot with dalcha</b> — on a banana leaf if you can.',timer:600,tl:'Rest'}
+];
+var timers={};
+function fmt(sec){sec=Math.max(0,sec);var m=Math.floor(sec/60),s=sec%60;return (m<10?'0':'')+m+':'+(s<10?'0':'')+s;}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function beep(){try{var C=window.AudioContext||window.webkitAudioContext;var ctx=new C();for(var i=0;i<3;i++){(function(i){var o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=880;var t=ctx.currentTime+i*0.4;g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(0.4,t+0.03);g.gain.exponentialRampToValueAtTime(0.0001,t+0.32);o.start(t);o.stop(t+0.35);})(i);}if(navigator.vibrate){navigator.vibrate([200,100,200]);}}catch(e){}}
+
+function applyTheme(){
+  var t=S.theme, eff=t;
+  if(t==='auto'){ eff=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'; }
+  document.documentElement.setAttribute('data-theme',eff);
+  document.getElementById('themeBtn').textContent='Theme: '+(t==='auto'?'Auto':t==='dark'?'Dark':'Light');
+}
+function render(){
+  applyTheme();
+  var ss=document.getElementById('staticSteps'); if(ss) ss.style.display='none';
+  var sc=S.scale,row=document.getElementById('scaleRow');row.innerHTML='';
+  [0.5,1,1.5,2].forEach(function(v){
+    var b=document.createElement('button');b.className='chip'+(v===sc?' on':'');b.textContent=(v===0.5?'½':v)+' kg';
+    b.setAttribute('aria-pressed',v===sc?'true':'false');
+    b.onclick=function(){S.scale=v;save();render();};row.appendChild(b);
+  });
+  var ti=document.getElementById('tabIng'),ts=document.getElementById('tabSteps');
+  ti.className='tab'+(S.tab==='ing'?' on':'');ts.className='tab'+(S.tab==='steps'?' on':'');
+  ti.onclick=function(){S.tab='ing';save();render();};
+  ts.onclick=function(){S.tab='steps';save();render();};
+  document.getElementById('paneIng').style.display=S.tab==='ing'?'':'none';
+  document.getElementById('paneStep').style.display=S.tab==='steps'?'':'none';
+  document.getElementById('stepDots').style.display=S.tab==='steps'?'flex':'none';
+  var pi=document.getElementById('paneIng');pi.innerHTML='';
+  ING.forEach(function(g){
+    var d=document.createElement('div');d.className='ing'+(S.checked[g.id]?' done':'');
+    var c=document.createElement('input');c.type='checkbox';c.checked=!!S.checked[g.id];c.tabIndex=-1;
+    c.setAttribute('aria-label',g.n);
+    var toggle=function(){S.checked[g.id]=!S.checked[g.id];save();render();};
+    c.onchange=toggle;d.onclick=function(e){if(e.target!==c)toggle();};
+    var tx=document.createElement('div');
+    tx.innerHTML='<span class="iname">'+esc(g.n)+'</span> &nbsp;<span class="iqty">'+esc(g.q(sc))+'</span><span class="inote">'+esc(g.note)+'</span>';
+    d.appendChild(c);d.appendChild(tx);pi.appendChild(d);
+  });
+  var doneCount=STEPS.filter(function(_,k){return S.done[k];}).length;
+  document.getElementById('pbar').style.width=(doneCount/STEPS.length*100)+'%';
+  document.getElementById('plabel').textContent=doneCount+' of '+STEPS.length+' steps done';
+  var dots=document.getElementById('stepDots');dots.innerHTML='';
+  STEPS.forEach(function(_,k){
+    var dt=document.createElement('button');dt.className='dot'+(S.done[k]?' done':'')+(k===S.step?' cur':'');
+    dt.setAttribute('aria-label','Go to step '+(k+1));dt.title='Step '+(k+1);
+    dt.onclick=function(){S.step=k;save();render();};dots.appendChild(dt);
+  });
+  var ps=document.getElementById('paneStep');ps.innerHTML='';
+  var i=S.step,st=STEPS[i];
+  var card=document.createElement('div');card.className='stepcard';
+  var tm=timers[i],thtml='';
+  if(st.timer){
+    if(!tm){tm={total:st.timer,rem:st.timer,run:false};timers[i]=tm;}
+    thtml='<div class="timer" data-timer-for="'+i+'"><div class="tdisp'+(tm.rem===0?' fin':'')+'">'+(tm.rem===0?'Done — '+esc(st.tl):fmt(tm.rem))+'</div><div class="tbtns">'
+      +'<button class="btn" data-tact="toggle">'+(tm.run?'Pause':'Start '+esc(st.tl)+' timer')+'</button>'
+      +'<button class="btn" data-tact="reset">Reset</button></div></div>';
+  }
+  card.innerHTML='<div class="snum">Step '+(i+1)+' of '+STEPS.length+'</div>'
+    +'<div class="stitle">'+esc(st.t)+'</div>'
+    +'<div class="sbody">'+st.b+'</div>'
+    +'<div class="snav"><button class="btn" id="prevB"'+(i===0?' disabled':'')+'>← Back</button>'
+    +'<button class="btn" id="doneB">'+(S.done[i]?'✓ Done — undo':'Mark done')+'</button>'
+    +'<button class="btn primary" id="nextB"'+(i===STEPS.length-1?' disabled':'')+'>Next →</button></div>'+thtml;
+  ps.appendChild(card);
+  document.getElementById('prevB').onclick=function(){if(S.step>0){S.step--;save();render();}};
+  document.getElementById('nextB').onclick=function(){if(S.step<STEPS.length-1){S.step++;S.done[i]=true;save();render();}};
+  document.getElementById('doneB').onclick=function(){S.done[i]=!S.done[i];save();render();};
+  var tgl=card.querySelector('[data-tact="toggle"]'),rst=card.querySelector('[data-tact="reset"]');
+  if(tgl){tgl.onclick=function(){var t=timers[i];if(t.rem===0){t.rem=t.total;}t.run=!t.run;render();};}
+  if(rst){rst.onclick=function(){var t=timers[i];t.rem=t.total;t.run=false;render();};}
+  if(window.matchMedia){var mq=window.matchMedia('(prefers-color-scheme: dark)');if(mq.addEventListener){mq.addEventListener('change',function(){if(S.theme==='auto')applyTheme();});}}
+}
+setInterval(function(){
+  var changed=false;
+  for(var k in timers){var t=timers[k];if(t.run&&t.rem>0){t.rem--;changed=true;if(t.rem===0){t.run=false;beep();}}}
+  if(changed){
+    var el=document.querySelector('[data-timer-for] .tdisp');
+    if(el){var idx=el.parentElement.getAttribute('data-timer-for');var t2=timers[idx];
+      el.textContent=t2.rem===0?'Done':fmt(t2.rem);
+      if(t2.rem===0)el.classList.add('fin');
+      var tb=el.parentElement.querySelector('[data-tact="toggle"]');if(tb)tb.textContent='Start';}
+  }
+},1000);
+document.getElementById('themeBtn').onclick=function(){
+  S.theme=S.theme==='auto'?'light':(S.theme==='light'?'dark':'auto');save();render();
+};
+render();
+})();
+</script>
+</body>
+</html>
